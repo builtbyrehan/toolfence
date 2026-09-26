@@ -1,12 +1,12 @@
 {
   "mcpServers": {
     "toolfence": {
-      "command": "${workspaceFolder}/.venv/Scripts/python.exe",
+      "command": "D:\\IBM BOB 2.0 HACKATHON\\toolfence\\.venv\\Scripts\\python.exe",
       "args": [
         "-m",
         "app.mcp_stdio"
       ],
-      "cwd": "${workspaceFolder}",
+      "cwd": "D:\\IBM BOB 2.0 HACKATHON\\toolfence",
       "disabled": false
     }
   }

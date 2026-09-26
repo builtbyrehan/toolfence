@@ -45,6 +45,21 @@ class CapabilityInventoryResponse(MCPResponseModel):
     capabilities: list[CapabilityView]
 
 
+class TaskContextResponse(MCPResponseModel):
+    """
+    Safe task identity exposed to Bob.
+
+    Deliberately excludes:
+    - approved capability grants
+    - approved resource scopes
+    - permission ceilings
+    - security configuration
+    """
+
+    task_id: str
+    task: str
+
+
 class PolicyProposalResponse(MCPResponseModel):
     accepted: bool
 
@@ -150,6 +165,7 @@ def create_mcp_server(
     - The model cannot choose an arbitrary CompiledPolicy.
     - The model cannot choose another task_id for protected calls.
     - Bob may propose permissions but cannot provide its own approved limit.
+    - Bob may read canonical task identity but not the approval ceiling.
     - Protected external operations always pass through the dispatcher.
     - ALLOW/DENY decisions therefore use the trusted active policy.
     - Backend execution remains separated from authorization.
@@ -178,8 +194,11 @@ def create_mcp_server(
         instructions=(
             "ToolFence provides task-scoped developer tools. "
             f"This server is bound to task {task_id}. "
-            "Inspect available capabilities, propose the minimum "
-            "required policy, then use protected tools. "
+            "Inspect the capability inventory and trusted task context, "
+            "build one complete minimum capability proposal, then submit "
+            "that proposal exactly once. "
+            "Do not inspect local ToolFence configuration to discover "
+            "approval limits. "
             "A ToolFence DENY decision means the external action "
             "was not executed."
         ),
@@ -219,11 +238,52 @@ def create_mcp_server(
         )
 
     @mcp.tool(
+        name="toolfence.task_context",
+        description=(
+            "Return the canonical trusted task ID and exact task text "
+            "for this MCP-bound task. This tool deliberately does not "
+            "expose the developer-approved capability ceiling."
+        ),
+    )
+    def task_context() -> TaskContextResponse:
+        """
+        Return canonical trusted task identity to Bob.
+
+        This solves the task-text synchronization problem without exposing
+        the trusted developer approval limit.
+
+        Bob receives:
+        - task_id
+        - canonical task text
+
+        Bob does NOT receive:
+        - approved grants
+        - approved scopes
+        - permission ceiling
+        """
+
+        approval = application.approvals.get(
+            task_id
+        )
+
+        if approval is None:
+            raise ValueError(
+                "No trusted approval is registered "
+                "for this task."
+            )
+
+        return TaskContextResponse(
+            task_id=task_id,
+            task=approval.task,
+        )
+
+    @mcp.tool(
         name="toolfence.propose_policy",
         description=(
-            "Submit the minimum Task Capability Contract proposed "
+            "Submit one complete minimum Task Capability Contract "
             "for this bound task. ToolFence validates it against a "
-            "separately trusted developer-approved limit."
+            "separately trusted developer-approved limit. Do not use "
+            "this tool incrementally or as a permission probe."
         ),
     )
     def propose_policy(
@@ -238,6 +298,10 @@ def create_mcp_server(
 
         The approved permission limit is also NOT accepted from the model.
         TaskPolicyController retrieves it from TrustedApprovalStore.
+
+        Bob should construct the complete minimum proposal before invoking
+        this tool because task-policy registration is intentionally
+        immutable once accepted.
         """
 
         proposal = {
