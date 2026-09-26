@@ -1,0 +1,82 @@
+{
+  "schema_version": "1.0",
+  "capabilities": [
+    {
+      "tool": "ticket.get",
+      "service": "ticket",
+      "action": "get",
+      "resource_type": "ticket_id",
+      "description": "Read a development ticket and its details."
+    },
+    {
+      "tool": "ticket.comment",
+      "service": "ticket",
+      "action": "comment",
+      "resource_type": "ticket_id",
+      "description": "Add a comment to a development ticket."
+    },
+    {
+      "tool": "ticket.delete",
+      "service": "ticket",
+      "action": "delete",
+      "resource_type": "ticket_id",
+      "description": "Delete a development ticket."
+    },
+    {
+      "tool": "repo.read",
+      "service": "repository",
+      "action": "read",
+      "resource_type": "repo_path",
+      "description": "Read a file from the sample repository."
+    },
+    {
+      "tool": "repo.write",
+      "service": "repository",
+      "action": "write",
+      "resource_type": "repo_path",
+      "description": "Create or update a file in the sample repository."
+    },
+    {
+      "tool": "pull_request.create",
+      "service": "repository",
+      "action": "create",
+      "resource_type": "branch",
+      "description": "Create a pull request from a feature branch."
+    },
+    {
+      "tool": "ci.run",
+      "service": "ci",
+      "action": "run",
+      "resource_type": "branch",
+      "description": "Run the predefined CI checks for a branch."
+    },
+    {
+      "tool": "ci.status",
+      "service": "ci",
+      "action": "status",
+      "resource_type": "branch",
+      "description": "Read the CI results for a branch."
+    },
+    {
+      "tool": "release.status",
+      "service": "release",
+      "action": "status",
+      "resource_type": "environment",
+      "description": "Read the deployment status of an environment."
+    },
+    {
+      "tool": "release.deploy",
+      "service": "release",
+      "action": "deploy",
+      "resource_type": "environment",
+      "description": "Simulate a deployment to an environment."
+    },
+    {
+      "tool": "secret.read",
+      "service": "secrets",
+      "action": "read",
+      "resource_type": "secret_id",
+      "description": "Read a mock secret by its identifier."
+    }
+  ]
+}

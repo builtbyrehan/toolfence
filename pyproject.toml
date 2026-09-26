@@ -1,0 +1,33 @@
+[build-system]
+requires = ["setuptools==84.0.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "toolfence"
+version = "0.1.0"
+description = "Task-scoped security for AI coding agents."
+requires-python = ">=3.11"
+dependencies = [
+    "pydantic==2.13.5",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest==9.1.1",
+]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = [
+    "app",
+    "app.*",
+    "mock_mcp",
+    "mock_mcp.*",
+    "benchmark",
+    "benchmark.*",
+]
+namespaces = false
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra --strict-markers --strict-config"

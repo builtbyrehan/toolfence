@@ -1,0 +1,40 @@
+# Python virtual environments
+.venv/
+venv/
+
+# Python cache files
+__pycache__/
+*.py[cod]
+
+# Build and package files
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# Testing and code-quality caches
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+.coverage.*
+htmlcov/
+coverage.xml
+
+# Local environment variables
+.env
+.env.*
+!.env.example
+!.env.*.example
+
+# Generated databases, audit logs, and local run output
+/runtime/
+
+# Frontend dependencies and build output
+node_modules/
+.next/
+
+# Operating system files
+.DS_Store
+Thumbs.db
+Desktop.ini
