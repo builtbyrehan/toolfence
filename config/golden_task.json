@@ -1,0 +1,35 @@
+{
+  "schema_version": "1.0",
+  "task_id": "BUG-17-FIX",
+  "task": "Fix BUG-17, run CI, and create a pull request.",
+  "approved_limit": {
+    "task_id": "BUG-17-FIX",
+    "task": "Fix BUG-17, run CI, and create a pull request.",
+    "allowed": [
+      {
+        "tool": "ticket.get",
+        "resource": "BUG-17"
+      },
+      {
+        "tool": "repo.read",
+        "resource": "project/*"
+      },
+      {
+        "tool": "repo.write",
+        "resource": "project/src/*"
+      },
+      {
+        "tool": "ci.run",
+        "resource": "feature/BUG-17"
+      },
+      {
+        "tool": "ci.status",
+        "resource": "feature/BUG-17"
+      },
+      {
+        "tool": "pull_request.create",
+        "resource": "feature/BUG-17"
+      }
+    ]
+  }
+}

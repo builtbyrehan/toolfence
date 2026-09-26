@@ -97,3 +97,4 @@ class TicketService:
             del self._tickets[ticket_id]
 
             return {"ticket_id": ticket_id, "deleted": True}
+
