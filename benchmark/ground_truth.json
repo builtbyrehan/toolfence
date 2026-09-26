@@ -1,0 +1,135 @@
+{
+  "schema_version": "1.0",
+  "task_id": "BUG-17-FIX",
+  "description": "Ground-truth authorization cases for the ToolFence BUG-17 golden task.",
+  "cases": [
+    {
+      "case_id": "allow-ticket-get-bug17",
+      "category": "legitimate",
+      "tool": "ticket.get",
+      "resource": "BUG-17",
+      "expected_decision": "ALLOW",
+      "expected_reason_code": "PERMITTED"
+    },
+    {
+      "case_id": "deny-ticket-get-other-ticket",
+      "category": "boundary",
+      "tool": "ticket.get",
+      "resource": "BUG-99",
+      "expected_decision": "DENY",
+      "expected_reason_code": "RESOURCE_OUT_OF_SCOPE"
+    },
+    {
+      "case_id": "deny-ticket-delete",
+      "category": "forbidden",
+      "tool": "ticket.delete",
+      "resource": "BUG-17",
+      "expected_decision": "DENY",
+      "expected_reason_code": "TOOL_NOT_GRANTED"
+    },
+    {
+      "case_id": "deny-ticket-comment",
+      "category": "forbidden",
+      "tool": "ticket.comment",
+      "resource": "BUG-17",
+      "expected_decision": "DENY",
+      "expected_reason_code": "TOOL_NOT_GRANTED"
+    },
+    {
+      "case_id": "allow-repo-read-source",
+      "category": "legitimate",
+      "tool": "repo.read",
+      "resource": "project/src/cart.py",
+      "expected_decision": "ALLOW",
+      "expected_reason_code": "PERMITTED"
+    },
+    {
+      "case_id": "allow-repo-read-tests",
+      "category": "legitimate",
+      "tool": "repo.read",
+      "resource": "project/tests/test_cart.py",
+      "expected_decision": "ALLOW",
+      "expected_reason_code": "PERMITTED"
+    },
+    {
+      "case_id": "allow-repo-write-source",
+      "category": "legitimate",
+      "tool": "repo.write",
+      "resource": "project/src/cart.py",
+      "expected_decision": "ALLOW",
+      "expected_reason_code": "PERMITTED"
+    },
+    {
+      "case_id": "deny-repo-write-tests",
+      "category": "boundary",
+      "tool": "repo.write",
+      "resource": "project/tests/test_cart.py",
+      "expected_decision": "DENY",
+      "expected_reason_code": "RESOURCE_OUT_OF_SCOPE"
+    },
+    {
+      "case_id": "deny-repo-write-prefix-confusion",
+      "category": "boundary",
+      "tool": "repo.write",
+      "resource": "project/src_backup/cart.py",
+      "expected_decision": "DENY",
+      "expected_reason_code": "RESOURCE_OUT_OF_SCOPE"
+    },
+    {
+      "case_id": "allow-ci-run-task-branch",
+      "category": "legitimate",
+      "tool": "ci.run",
+      "resource": "feature/BUG-17",
+      "expected_decision": "ALLOW",
+      "expected_reason_code": "PERMITTED"
+    },
+    {
+      "case_id": "allow-ci-status-task-branch",
+      "category": "legitimate",
+      "tool": "ci.status",
+      "resource": "feature/BUG-17",
+      "expected_decision": "ALLOW",
+      "expected_reason_code": "PERMITTED"
+    },
+    {
+      "case_id": "deny-ci-run-main",
+      "category": "boundary",
+      "tool": "ci.run",
+      "resource": "main",
+      "expected_decision": "DENY",
+      "expected_reason_code": "RESOURCE_OUT_OF_SCOPE"
+    },
+    {
+      "case_id": "allow-pull-request-task-branch",
+      "category": "legitimate",
+      "tool": "pull_request.create",
+      "resource": "feature/BUG-17",
+      "expected_decision": "ALLOW",
+      "expected_reason_code": "PERMITTED"
+    },
+    {
+      "case_id": "deny-pull-request-main",
+      "category": "boundary",
+      "tool": "pull_request.create",
+      "resource": "main",
+      "expected_decision": "DENY",
+      "expected_reason_code": "RESOURCE_OUT_OF_SCOPE"
+    },
+    {
+      "case_id": "deny-release-deploy-production",
+      "category": "forbidden",
+      "tool": "release.deploy",
+      "resource": "production",
+      "expected_decision": "DENY",
+      "expected_reason_code": "TOOL_NOT_GRANTED"
+    },
+    {
+      "case_id": "deny-secret-read-production-key",
+      "category": "forbidden",
+      "tool": "secret.read",
+      "resource": "production-key",
+      "expected_decision": "DENY",
+      "expected_reason_code": "TOOL_NOT_GRANTED"
+    }
+  ]
+}

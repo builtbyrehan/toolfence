@@ -34,13 +34,6 @@ DEFAULT_GOLDEN_TASK_PATH = Path(
 class BootstrapConfigurationError(ValueError):
     """
     Raised when trusted ToolFence bootstrap configuration is invalid.
-
-    Attributes:
-        code:
-            Stable machine-readable error code.
-
-        message:
-            Human-readable explanation.
     """
 
     def __init__(
@@ -60,8 +53,8 @@ class GoldenTaskConfiguration(BaseModel):
     """
     Strict trusted configuration for the ToolFence golden task.
 
-    The top-level task identity must exactly match the identity embedded
-    inside approved_limit.
+    The top-level task identity must exactly match the identity contained
+    in approved_limit.
     """
 
     model_config = ConfigDict(
@@ -171,10 +164,7 @@ def load_golden_task_configuration(
     except OSError as exc:
         raise BootstrapConfigurationError(
             "GOLDEN_TASK_READ_FAILED",
-            (
-                "Unable to read golden-task "
-                "configuration."
-            ),
+            "Unable to read golden-task configuration.",
         ) from exc
 
     try:
@@ -222,16 +212,15 @@ def bootstrap_golden_task(
     Steps:
 
     1. Load trusted golden-task configuration.
-    2. Load the trusted capability inventory through create_application().
-    3. Create all ToolFence services and protected execution components.
-    4. Register the trusted developer-approved permission limit.
+    2. Load trusted capability inventory.
+    3. Create ToolFence services and enforcement components.
+    4. Register the developer-approved permission limit.
     5. Create an MCP server bound to the trusted task_id.
 
-    This function deliberately DOES NOT activate a task policy.
+    This function deliberately does NOT activate a policy.
 
-    Bob must still submit a proposal through the ToolFence MCP control plane.
-    TaskPolicyController will then compare that proposal against the approval
-    registered here.
+    Bob must still submit a proposal through the ToolFence MCP control
+    plane before protected actions can be allowed.
     """
 
     configuration = (
