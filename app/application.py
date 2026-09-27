@@ -1,4 +1,4 @@
-from __future__ import annotations
+﻿from __future__ import annotations
 
 import json
 from dataclasses import dataclass
@@ -13,6 +13,7 @@ from app.policy.controller import (
     TrustedApprovalStore,
 )
 from app.policy.schema import CapabilityInventory
+from app.policy.snapshot_store import SnapshottingPolicyStore
 from app.policy.store import ActivePolicyStore
 
 from mock_mcp.ci import CIService
@@ -82,6 +83,9 @@ class ToolFenceApplication:
     - dispatcher:
         Performs validation, authorization, execution, and audit integration.
 
+    Runtime policy snapshots are observability-only. They are never used
+    as the authorization source for protected calls.
+
     No approval or policy is registered automatically.
     """
 
@@ -119,6 +123,9 @@ def create_application(
     - CI and repository share the same repository state.
     - Protected execution uses the trusted active policy store.
     - Every validated protected request can be audited.
+    - Activated policy state is mirrored to a sanitized observability
+      snapshot for the separate dashboard process.
+    - The observability snapshot is never consulted for authorization.
     - No task approval or active policy is created automatically.
     """
 
@@ -128,7 +135,7 @@ def create_application(
 
     approvals = TrustedApprovalStore()
 
-    policy_store = ActivePolicyStore()
+    policy_store = SnapshottingPolicyStore()
 
     controller = TaskPolicyController(
         inventory=inventory,
